@@ -16,9 +16,9 @@
 	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.ie.css" /><![endif]-->
 
 	<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
-	<script type="text/javascript" src="../dist/Leaflet.Coordinates-0.1.3.min.js"></script>
-	<link rel="stylesheet" href="../dist/Leaflet.Coordinates-0.1.3.css"/>
-	<!--[if lte IE 8]><link rel="stylesheet" href="../dist/Leaflet.Coordinates-0.1.3.ie.css" /><![endif]-->
+	<script type="text/javascript" src="../dist/Leaflet.Coordinates-0.1.4.min.js"></script>
+	<link rel="stylesheet" href="../dist/Leaflet.Coordinates-0.1.4.css"/>
+	<!--[if lte IE 8]><link rel="stylesheet" href="../dist/Leaflet.Coordinates-0.1.4.ie.css" /><![endif]-->
 </head>
 <body>
 
@@ -42,14 +42,16 @@
 			decimals:2,
 			decimalSeperator:",",
 			labelTemplateLat:"Latitude: {y}",
-			labelTemplateLng:"Longitude: {x}"
+			labelTemplateLng:"Longitude: {x}",
+                        panToButton: true
 		}).addTo(map);
 		L.control.coordinates({
 			position:"topright",
 			useDMS:true,
 			labelTemplateLat:"N {y}",
 			labelTemplateLng:"E {x}",
-			useLatLngOrder:true
+			useLatLngOrder:true,
+                        panToButton: true
 		}).addTo(map);
 	</script>
 </body>

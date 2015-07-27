@@ -26,7 +26,9 @@ L.Control.Coordinates = L.Control.extend({
 		//leaflet marker type
 		markerType: L.marker,
 		//leaflet marker properties
-		markerProps: {}
+		markerProps: {},
+                //PanTo Button
+                panToButton: false
 	},
 
 	onAdd: function(map) {
@@ -46,15 +48,22 @@ L.Control.Coordinates = L.Control.extend({
 		var xSpan, ySpan;
 		if (options.useLatLngOrder) {
 			ySpan = L.DomUtil.create("span", "", this._inputcontainer);
-			this._inputY = this._createInput("inputY", this._inputcontainer);
+			this._inputY = this._createInput("inputY", this._inputcontainer, "text");
 			xSpan = L.DomUtil.create("span", "", this._inputcontainer);
-			this._inputX = this._createInput("inputX", this._inputcontainer);
+			this._inputX = this._createInput("inputX", this._inputcontainer, "text");
 		} else {
 			xSpan = L.DomUtil.create("span", "", this._inputcontainer);
-			this._inputX = this._createInput("inputX", this._inputcontainer);
+			this._inputX = this._createInput("inputX", this._inputcontainer, "text");
 			ySpan = L.DomUtil.create("span", "", this._inputcontainer);
-			this._inputY = this._createInput("inputY", this._inputcontainer);
+			this._inputY = this._createInput("inputY", this._inputcontainer, "text");
 		}
+                
+                // Add button used for panning to the location if enabled via options
+                if (options.panToButton) {
+                    this._panButton = this._createInput("buttonPan", this._inputcontainer, "button");
+                    L.DomEvent.on(this._panButton, 'click', this._handlePanToClick, this);
+                }
+                
 		xSpan.innerHTML = options.labelTemplateLng.replace("{x}", "");
 		ySpan.innerHTML = options.labelTemplateLat.replace("{y}", "");
 
@@ -79,9 +88,12 @@ L.Control.Coordinates = L.Control.extend({
 	/**
 	 *	Creates an input HTML element in given container with given classname
 	 */
-	_createInput: function(classname, container) {
+	_createInput: function(classname, container, inputtype) {
 		var input = L.DomUtil.create("input", classname, container);
-		input.type = "text";
+		input.type = inputtype;
+                if (inputtype == "button") {
+                    input.value = "PanTo";
+                }
 		L.DomEvent.disableClickPropagation(input);
 		return input;
 	},
@@ -107,6 +119,13 @@ L.Control.Coordinates = L.Control.extend({
 				break;
 		}
 	},
+        _handlePanToClick: function(){
+            var x = L.NumberFormatter.createValidNumber(this._inputX.value, this.options.decimalSeperator);
+	    var y = L.NumberFormatter.createValidNumber(this._inputY.value, this.options.decimalSeperator); 
+            if (x !== undefined && y !== undefined) {
+                this._map.panTo({lng: x, lat: y});
+            }
+        },
 
 	/**
 	 *	Called on each keyup except ESC
